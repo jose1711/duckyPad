@@ -9,6 +9,10 @@
 #include "ssd1306.h"
 #include "buttons.h"
 #include "neopixel.h"
+#include "usb_device.h"
+#include "usbd_customhid.h"
+
+#define HID_RESPONSE_OK 0
 
 // 2300 seems to be max, 2048 just to be safe
 #define BIN_BUF_SIZE 2048
@@ -22,6 +26,8 @@ uint16_t charjitter_value;
 uint16_t rand_min, rand_max;
 uint16_t loop_size;
 uint8_t epilogue_actions;
+
+extern uint8_t hid_tx_buf[HID_TX_BUF_SIZE];
 
 typedef struct
 {
@@ -527,6 +533,16 @@ void execute_instruction(uint16_t curr_pc, ds3_exe_result* exe, uint8_t keynum)
   {
     char* str_buf = make_str(op_data);
     ssd1306_WriteString(str_buf, Font_6x10,White);
+  }
+ else if(this_opcode == OP_HID)
+ {
+    char* str_buf = make_str(op_data);
+    memset(hid_tx_buf, 0, HID_TX_BUF_SIZE);
+    hid_tx_buf[0] = 4;
+    hid_tx_buf[1] = 0;
+    hid_tx_buf[2] = HID_RESPONSE_OK;
+    memcpy(hid_tx_buf + 3, str_buf, strlen(str_buf)+1);
+    USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, hid_tx_buf, HID_TX_BUF_SIZE);
   }
   else if(this_opcode == OP_OLU)
   {
