@@ -27,6 +27,8 @@ uint16_t rand_min, rand_max;
 uint16_t loop_size;
 uint8_t epilogue_actions;
 
+extern SSD1306_t SSD1306;
+
 extern uint8_t hid_tx_buf[HID_TX_BUF_SIZE];
 
 typedef struct
@@ -598,6 +600,19 @@ void execute_instruction(uint16_t curr_pc, ds3_exe_result* exe, uint8_t keynum)
    ssd1306_UpdateScreen();
    f_close(&image_file);
  }
+	else if (this_opcode == OP_SMB)
+	{
+   char* str_buf = make_str(op_data);
+	 for (int y=0; y<strlen(str_buf); y++) {
+		 if (y>9) break;
+     for (int x=0; x<6; x++) {
+			 if (((str_buf[y] - '0') >> (5-x)) & 0x1) {
+				 ssd1306_DrawPixel(SSD1306.CurrentX+x, SSD1306.CurrentY+y, White);
+			 }
+		 }
+	 }
+	 SSD1306.CurrentX += 6;
+	}
 
   else if(this_opcode == OP_OLU)
   {

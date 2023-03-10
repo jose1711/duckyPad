@@ -66,6 +66,7 @@ OP_GOTOP = ("GOTOP", 46)
 OP_SLEEP = ("SLEEP", 47)
 OP_HID = ("HID", 48)
 OP_IMG = ("IMG", 49)
+OP_SMB = ("SMB", 50)
 
 arith_lookup = {
     "Eq" : OP_EQ,
@@ -533,7 +534,7 @@ def make_dsb(program_listing):
             this_instruction['opcode'] = OP_CALL
             this_instruction['oparg'] = label_dict[func_lookup[fun_name]['fun_start']]
             assembly_listing.append(this_instruction)
-        elif this_line.startswith(cmd_STRING) or first_word == cmd_OLED_PRINT or first_word == cmd_SEND_HID or first_word == cmd_IMG:
+        elif this_line.startswith(cmd_STRING) or first_word in (cmd_OLED_PRINT, cmd_SEND_HID, cmd_IMG, cmd_SMB):
             str_content = this_line.split(' ', 1)[-1]
             if str_content not in str_lookup:
                 str_lookup[str_content] = lnum
@@ -547,6 +548,8 @@ def make_dsb(program_listing):
                 this_instruction['opcode'] = OP_HID
             elif first_word == cmd_IMG:
                 this_instruction['opcode'] = OP_IMG
+            elif first_word == cmd_SMB:
+                this_instruction['opcode'] = OP_SMB
             this_instruction['oparg'] = f"STR@{str_lookup[str_content]}"
             assembly_listing.append(this_instruction)
         elif first_word == cmd_DELAY:
@@ -695,7 +698,7 @@ def make_dsb(program_listing):
             label_to_addr_dict[item['label']] = item['addr']
 
     for item in assembly_listing:
-        if item['opcode'] == OP_STR or item['opcode'] == OP_STRLN or item['opcode'] == OP_OLP or item['opcode'] == OP_HID or item['opcode'] == OP_IMG:
+        if item['opcode'] in (OP_STR, OP_STRLN, OP_OLP, OP_HID, OP_IMG, OP_SMB):
             str_lnum = int(item['oparg'].replace('STR@', ''))
             for sssss in str_list:
                 if sssss['lnum'] == str_lnum:
