@@ -45,7 +45,7 @@ if not os.path.splitext(args.image)[1]:
 if not args.outfile:
     outfile = os.path.splitext(args.image)[0]
 else:
-    outfile = args.outfile
+    outfile = args.outfile[0]
 
 if os.path.exists(outfile):
     print(f'Output file {outfile} already exists!')
