@@ -53,6 +53,8 @@
 #define OP_GOTOP 46
 #define OP_SLEEP 47
 #define OP_HID 48
+#define OP_IMG 49
+#define OP_SMB 50
 
 #define INSTRUCTION_SIZE_BYTES 3
 #define STACK_SIZE 8
