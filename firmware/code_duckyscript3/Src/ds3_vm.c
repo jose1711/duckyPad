@@ -550,55 +550,7 @@ void execute_instruction(uint16_t curr_pc, ds3_exe_result* exe, uint8_t keynum)
  else if(this_opcode == OP_IMG)
  {
    char* str_buf = make_str(op_data);
-
-   FIL image_file;
-   uint8_t ret = 1;
-   UINT rc = 0;
-   uint8_t data_pos;
-
-   char temp_buf[PATH_SIZE];
-   char read_buffer[READ_BUF_SIZE];
-   memset(read_buffer, 0, READ_BUF_SIZE);
-   memset(temp_buf, 0, PATH_SIZE);
-   sprintf(temp_buf, "/img/%s", str_buf);
-   ret = f_open(&image_file, temp_buf, FA_READ);
-   if (ret != FR_OK) {
-     ssd1306_Fill(Black);
-     ssd1306_SetCursor(10, 13);
-     ssd1306_WriteString("Read error:", Font_6x10, White);
-     ssd1306_SetCursor(10, 20);
-     ssd1306_WriteString(str_buf, Font_6x10, White);
-     ssd1306_UpdateScreen();
-     osDelay(1000);
-     return;
-   }
-
-   for (int column=0; column<4; column++) {
-     data_pos = 0;
-     f_read(&image_file, read_buffer, READ_BUF_SIZE, &rc);
-
-     if (rc != READ_BUF_SIZE) {
-       ssd1306_Fill(Black);
-       ssd1306_SetCursor(10, 13);
-       ssd1306_WriteString("Incomplete read", Font_6x10, White);
-       ssd1306_UpdateScreen();
-       osDelay(1000);
-       return;
-     }
-
-     for (int y=column*16; y<16*(column+1); y++) {
-       for (int xshift=0; xshift<=120; xshift+=8) {
-         for (int x=0; x<8; x++) {
-           if ((read_buffer[data_pos] >> (7 - x)) & 0x1) {
-             ssd1306_DrawPixel(x+xshift, y, White);
-           }                
-         }
-         data_pos++;
-       }    
-     }
-   }
-   ssd1306_UpdateScreen();
-   f_close(&image_file);
+   show_image(str_buf);
  }
 	else if (this_opcode == OP_SMB)
 	{
