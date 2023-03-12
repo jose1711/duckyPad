@@ -54,6 +54,7 @@ extern profile_cache p_cache;
 typedef struct
 {
   uint32_t sleep_after_ms;
+	uint8_t rotate;
 } dp_global_settings;
 
 void der_init(ds3_exe_result* der);

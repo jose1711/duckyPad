@@ -1,5 +1,6 @@
 #include "ssd1306.h"
 #include "shared.h"
+#include "parser.h"
 
 #define SSD1306_LCDWIDTH 128
 #define SSD1306_LCDHEIGHT 64
@@ -37,6 +38,8 @@ SSD1306_t SSD1306;
 
 uint8_t i2c_status;
 uint8_t last_dim;
+
+extern dp_global_settings dp_settings;
 
 //
 //	Een byte sturen naar het commando register
@@ -168,7 +171,10 @@ void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color)
 		// We gaan niet buiten het scherm schrijven
 		return;
 	}
-	
+	if (dp_settings.rotate) {
+	  x = SSD1306_WIDTH - x - 1;
+	  y = SSD1306_HEIGHT - y - 1;
+	}
 	// Kijken of de pixel geinverteerd moet worden
 	if (SSD1306.Inverted) 
 	{

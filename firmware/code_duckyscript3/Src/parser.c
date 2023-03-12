@@ -536,7 +536,7 @@ void save_settings(void)
   if(f_open(&sd_file, "dp_settings.txt", FA_CREATE_ALWAYS | FA_WRITE) != 0)
     goto ss_end;
   memset(temp_buf, 0, PATH_SIZE);
-  sprintf(temp_buf, "sleep_after_min %d\nbi %d\nkbl %s\n", dp_settings.sleep_after_ms/60000, brightness_index, curr_kb_layout);
+  sprintf(temp_buf, "sleep_after_min %d\nrot %d\nbi %d\nkbl %s\n", dp_settings.sleep_after_ms/60000, dp_settings.rotate, brightness_index, curr_kb_layout);
   f_write(&sd_file, temp_buf, strlen(temp_buf), &bytes_read);
   ss_end:
   f_close(&sd_file);
@@ -551,6 +551,8 @@ void load_settings(void)
   {
     if(strncmp(temp_buf, "sleep_after_min", 15) == 0)
       dp_settings.sleep_after_ms = atoi(temp_buf+15) * 60000;
+    if(strncmp(temp_buf, "rot", 3) == 0)
+      dp_settings.rotate = atoi(temp_buf+3);
     if(strncmp(temp_buf, "bi ", 3) == 0)
       brightness_index = atoi(temp_buf+3);
     if(brightness_index >= BRIGHTNESS_LEVELS)
