@@ -4,6 +4,7 @@ convert image file to a monochromatic 1-bit per pixel file for use
 with DuckyPad (v3).
 '''
 from PIL import Image
+from math import ceil
 import argparse
 import os
 import sys
@@ -13,19 +14,25 @@ def image_to_bits(image_file, output_file):
     image = Image.open(image_file)
 
     width, height = image.size
-    if display_width != width or display_height != height:
-        raise Exception(f'Image dimensions do not match the OLED display ({width}x{height} vs {display_width}x{display_height}')
+    if display_width < width or display_height < height:
+        raise Exception(f'Image dimensions exceed size of OLED display ({width}x{height} vs {display_width}x{display_height}')
 
     with open(output_file, 'wb') as f:
+        # the first byte is image width
+        f.write(bytes([ceil(image.width/8)*8]))
         for y in range(height):
             for x in range(0, width, 8):
                 byte = 0
                 for i in range(8):
-                    if isinstance(image.getpixel((x+i, y)), tuple):
-                        pixel_value = sum(image.getpixel((x+i, y))) != 0
-                    else:
-                        pixel = image.getpixel((x+i, y)) != 0
-                    byte |= (pixel << (7 - i))
+                    try:
+                        if isinstance(image.getpixel((x+i, y)), tuple):
+                            pixel_value = sum(image.getpixel((x+i, y))) != 0
+                        else:
+                            pixel_value = image.getpixel((x+i, y)) != 0
+                    except IndexError:
+                        pixel_value = 0
+
+                    byte |= (pixel_value << (7 - i))
                 f.write(bytes([byte]))
 
 
