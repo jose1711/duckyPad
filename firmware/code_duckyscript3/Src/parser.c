@@ -454,7 +454,10 @@ void show_image(char img_file[])
          for (int x=0; x<8; x++) {
            if ((read_buffer[b] >> (7 - x)) & 0x1) {
              ssd1306_DrawPixel(SSD1306.CurrentX + x + xshift, SSD1306.CurrentY + y, White);
-           }
+           } else
+					 {
+						 ssd1306_DrawPixel(SSD1306.CurrentX + x + xshift, SSD1306.CurrentY + y, Black);
+					 }
          }
 				 xshift+=8;
 				  if (xshift > (*image_width-8)) {

@@ -1,6 +1,7 @@
 #include "ssd1306.h"
 #include "shared.h"
 #include "parser.h"
+#include "ds3_vm.h"
 
 #define SSD1306_LCDWIDTH 128
 #define SSD1306_LCDHEIGHT 64
@@ -40,6 +41,7 @@ uint8_t i2c_status;
 uint8_t last_dim;
 
 extern dp_global_settings dp_settings;
+extern uint8_t oledtransparent_value;
 
 //
 //	Een byte sturen naar het commando register
@@ -180,13 +182,13 @@ void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color)
 	{
 		color = (SSD1306_COLOR)!color;
 	}
-	
+
 	// We zetten de juiste kleur voor de pixel
 	if (color == White)
 	{
 		SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] |= 1 << (y % 8);
 	} 
-	else 
+	else if (oledtransparent_value == 0)
 	{
 		SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] &= ~(1 << (y % 8));
 	}
@@ -221,7 +223,7 @@ char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color)
 			{
 				ssd1306_DrawPixel(SSD1306.CurrentX + j, (SSD1306.CurrentY + i), (SSD1306_COLOR) color);
 			} 
-			else 
+			else if (oledtransparent_value == 0)
 			{
 				ssd1306_DrawPixel(SSD1306.CurrentX + j, (SSD1306.CurrentY + i), (SSD1306_COLOR)!color);
 			}

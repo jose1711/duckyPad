@@ -304,6 +304,9 @@ def replace_delay_statements(pgm_line):
 	elif first_word == cmd_CHARJITTER:
 		pgm_line = pgm_line.replace(cmd_CHARJITTER, f"$_{cmd_CHARJITTER} =")
 		first_word = pgm_line.split()[0]
+	elif first_word == cmd_OLED_TRANSPARENT:
+		pgm_line = pgm_line.replace(cmd_OLED_TRANSPARENT, f"$_{cmd_OLED_TRANSPARENT} =")
+		first_word = pgm_line.split()[0]
 	return first_word, pgm_line
 
 def is_valid_swc_arg(name, vt):

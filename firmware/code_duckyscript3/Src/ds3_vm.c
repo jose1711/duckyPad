@@ -20,6 +20,7 @@ uint8_t bin_buf[BIN_BUF_SIZE];
 #define VAR_BUF_SIZE 128
 uint8_t var_buf[VAR_BUF_SIZE];
 uint8_t current_bank;
+uint8_t oledtransparent_value;
 uint16_t defaultdelay_value;
 uint16_t defaultchardelay_value;
 uint16_t charjitter_value;
@@ -167,6 +168,8 @@ void write_var(uint16_t addr, uint16_t value)
     ; // this is read only, so do nothing
   else if (addr == _NEEDS_EPILOGUE)
     epilogue_actions = value; // this is read only, so do nothing
+	else if (addr == OLEDTRANSPARENT_ADDR)
+		oledtransparent_value = value;
   else if(addr < VAR_BUF_SIZE)
     store_uint16_as_two_bytes_at(addr, value);
 }
@@ -197,6 +200,8 @@ uint16_t read_var(uint16_t addr)
     return key_press_count[current_key];
   else if (addr == _NEEDS_EPILOGUE)
     return epilogue_actions;
+	else if (addr == OLEDTRANSPARENT_ADDR)
+		return oledtransparent_value;
   else if(addr < VAR_BUF_SIZE)
     return make_uint16(var_buf[addr], var_buf[addr+1]);
   return 0;
@@ -671,6 +676,7 @@ void run_dsb(ds3_exe_result* er, uint8_t keynum)
   stack_init(&call_stack);
   defaultdelay_value = DEFAULT_CMD_DELAY_MS;
   defaultchardelay_value = DEFAULT_CHAR_DELAY_MS;
+	oledtransparent_value = OLED_TRANSPARENT_MODE;
   charjitter_value = 0;
   rand_max = 65535;
   rand_min = 0;

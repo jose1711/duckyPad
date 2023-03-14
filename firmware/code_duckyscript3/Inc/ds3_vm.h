@@ -92,6 +92,7 @@
 #define _LOOP_SIZE (0xffff - 8)
 #define _KEYPRESS_COUNT (0xffff - 9)
 #define _NEEDS_EPILOGUE  (0xffff - 10)
+#define OLEDTRANSPARENT_ADDR  (0xffff - 11)
 
 typedef struct
 {
@@ -107,6 +108,8 @@ void run_dsb(ds3_exe_result* er, uint8_t keynum);
 void release_key(uint8_t code, uint8_t type);
 uint8_t read_byte(uint16_t addr);
 uint8_t write_byte(uint16_t addr, uint8_t data);
+void show_image(char img_file[]);
+// uint8_t oledtransparent_value;
 
 #endif
 

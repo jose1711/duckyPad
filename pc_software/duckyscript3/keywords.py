@@ -8,6 +8,7 @@ cmd_CHARJITTER = "CHARJITTER"
 cmd_DELAY = "DELAY"
 cmd_STRING = "STRING"
 cmd_STRINGLN = "STRINGLN"
+cmd_OLED_TRANSPARENT = "OLED_TRANSPARENT"
 
 cmd_UARTPRINT = "UARTPRINT"
 cmd_EMUK = "EMUK"
@@ -392,4 +393,5 @@ reserved_variable_dict = {
 	"_LOOP_SIZE": (0xffff - 8),
 	"_KEYPRESS_COUNT": (0xffff - 9),
 	"_NEEDS_EPILOGUE": (0xffff - 10),
+	"_OLED_TRANSPARENT": (0xffff - 11),
 }
