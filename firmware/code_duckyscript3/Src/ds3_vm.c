@@ -566,6 +566,10 @@ void execute_instruction(uint16_t curr_pc, ds3_exe_result* exe, uint8_t keynum)
 			 if (((str_buf[y] - '0') >> (5-x)) & 0x1) {
 				 ssd1306_DrawPixel(SSD1306.CurrentX+x, SSD1306.CurrentY+y, White);
 			 }
+			else if (oledtransparent_value == 0)
+			{
+				ssd1306_DrawPixel(SSD1306.CurrentX+x, SSD1306.CurrentY+y, Black);
+			}
 		 }
 	 }
 	 SSD1306.CurrentX += 6;
