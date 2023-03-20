@@ -1,7 +1,24 @@
 #!/usr/bin/env python
 '''
-convert image file to a monochromatic 1-bit per pixel file for use
-with DuckyPad (v3).
+Convert image file to a monochromatic 1-bit per pixel file for use
+with DuckyPad (v3). Note that input image dimensions may not exceed
+the resolution of OLED display (128x64).
+
+Usage:
+
+    img2bits.py [-h] [-o OUTPUT_FILE] image
+
+positional arguments:
+  image           Image file to convert
+
+options:
+  -h, --help      show this help message and exit
+  -o OUTPUT_FILE  Output file (defaults to input file without extension)
+
+Example:
+
+    img2bits.py -o some_image some_image.png
+
 '''
 from PIL import Image
 from math import ceil
