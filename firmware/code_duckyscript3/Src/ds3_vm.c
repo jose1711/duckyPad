@@ -295,10 +295,31 @@ void parse_olc(void)
   uint16_t xxx, yyy;
   stack_pop(&arithmetic_stack, &yyy);
   stack_pop(&arithmetic_stack, &xxx);
+  if (xxx & (1 << 15)) {
+		  // +X
+		  xxx &= 127;
+      xxx += SSD1306.CurrentX;
+  } else if (xxx & (1 << 14)) {
+		  // -X
+		  xxx &= 127;
+      xxx = SSD1306.CurrentX - xxx;
+  }
+
+  if (yyy & (1 << 15)) {
+		  // +Y
+		  yyy &= 127;
+      yyy += SSD1306.CurrentY;
+  } else if (yyy & (1 << 14)) {
+		  // -Y
+		  yyy &= 127;
+      yyy = SSD1306.CurrentY - yyy;
+  }
+
   if(xxx >= SSD1306_WIDTH || yyy >= SSD1306_HEIGHT)
     return;
   ssd1306_SetCursor(xxx, yyy);
 }
+
 
 void execute_instruction(uint16_t curr_pc, ds3_exe_result* exe, uint8_t keynum)
 {

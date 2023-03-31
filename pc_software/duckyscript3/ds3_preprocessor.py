@@ -1,6 +1,7 @@
 # https://docs.hak5.org/hak5-usb-rubber-ducky/operators-conditions-loops-and-functions/functions
 
 import ds_syntax_check
+import re
 from keywords import *
 
 # ---------------------- LINE PARSER ----------------------
@@ -318,6 +319,16 @@ def is_valid_swc_arg(name, vt):
 		return False
 	return name[1:] in vt
 
+def is_valid_cursor_arg(name, vt):
+	name = re.sub(r'^[-+]', '', str(name))
+	try:
+		return 0 <= int(name) <= 128;
+	except:
+		pass
+	if name[0] != '$':
+		return False
+	return name[1:] in vt
+
 def check_color(pgm_line, vt):
 	split = [x for x in pgm_line.split(' ') if len(x) > 0]
 	if len(split) != 5:
@@ -367,7 +378,7 @@ def check_olc(pgm_line, vt):
 	if len(split) != 3:
 		return PARSE_ERROR, "wrong number of arguments"
 	for item in split[1:]:
-		if is_valid_swc_arg(item, vt) is False:
+		if is_valid_cursor_arg(item, vt) is False:
 			return PARSE_ERROR, "invalid cursor value"
 	return PARSE_OK, ''
 

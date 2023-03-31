@@ -3,6 +3,7 @@ import ds3_preprocessor
 import ast
 import myast
 from keywords import *
+import re
 
 # CPU instructions
 OP_NOP = ("NOP", 0)
@@ -351,6 +352,15 @@ def get_swc_arg(name):
         pass
     return name[1:]
 
+def get_cursor_arg(name):
+    name = re.sub(r'^[-+]', '', str(name))
+
+    try:
+        return int(name)
+    except:
+        pass
+    return name[1:]
+
 def parse_color(pgm_line):
     ins_list = []
     split = [x for x in pgm_line.split(' ') if len(x) > 0]
@@ -415,12 +425,19 @@ def parse_olc(pgm_line):
     split = [x for x in pgm_line.split(' ') if len(x) > 0]
     
     for item in split[1:]:
-        value = get_swc_arg(item)
+        value = get_cursor_arg(item)
         this_instruction = get_empty_instruction()
         if isinstance(value, int):
             this_instruction['opcode'] = OP_PUSHC
         else:
             this_instruction['opcode'] = OP_PUSHV
+
+        if str(item).startswith('+'):
+            if isinstance(value, int):
+                value |= (1 << 15)
+        elif str(item).startswith('-'):
+            if isinstance(value, int):
+                value |= (1 << 14)
         this_instruction['oparg'] = value
         this_instruction['comment'] = pgm_line
         ins_list.append(this_instruction)
