@@ -16,7 +16,7 @@ character = '''
   ooo
  o   o
  o
- o 
+ o
  o   o
   ooo
 '''
@@ -26,7 +26,7 @@ for line in character.splitlines()[1:]:
     bits = 0
     for pos, x in enumerate(line):
         if x != ' ':
-            bits |= (x != '') << (5-pos)
+            bits |= (x != '') << (5 - pos)
     output += chr(bits + 48)
 
-print(f'SMB {output[:10]}')
+print(f'OLED SYMBOL {output[:10]}')

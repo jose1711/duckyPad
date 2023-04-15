@@ -446,11 +446,11 @@ Render inactive color as black (`n = 0`, the default setting) or transparent (`n
 
 #### `OLED_BITMAP file`
 
-Display a monochrome image at the current cursor location. You must first convert the file using `img2bits.py` utility and place it in the `img/` directory on the SD card. If you want to use a file as a profile default background, it should be named `profileN`, where N is a profile number.
+Display a monochrome image at the current cursor location. You must first convert the file using `img2bits.py` utility (see `resources/img_command`) and place it in the `img/` directory on the SD card. If you want to use a file as a profile default background, it should be named `profileN`, where N is a profile number.
 
 #### `OLED_SYMBOL symbol`
 
-Display a custom 6x10 symbol, use `txt2symbol.py` script to generate a command argument from a text definition. Example:
+Display a custom 6x10 symbol, use `txt2symbol.py` (see `resources/img_command`) script to generate a command argument from a text definition. Example:
 ```
 DEFINE CARET 4:
 DEFINE ACUTE 24
