@@ -98,6 +98,8 @@ As a result, you can now write much more elaborate scripts for your needs!
 
     - [RGB LED Commands](#rgb-led-commands)
 
+    - [Special Commands](#special-commands)
+
 - [Reserved Variables](#reserved-variables)
 
 - [Reading Buttons](#reading-buttons)
@@ -415,15 +417,18 @@ No recursion! Don't even think about it!
 
 ### OLED Commands
 
-#### `OLED_CURSOR x y`
+#### `OLED_CURSOR [+-]x [+-]y`
 
-Set where to print on screen.
+Set where to print on screen. Coordinates may be given as absolute or relative (if preceded
+with sign) to current position.
 
 `x` and `y` are coordinates in pixels. The characters prints from **top-left** corner.
 
 `x` can be constants or variables between `0` and `127`
 
 `y` can be constants or variables between `0` and `63`
+
+Note that variables may only be used in absolute mode.
 
 #### `OLED_PRINT`
 
@@ -435,6 +440,29 @@ Prints the message into display buffer at current cursor location.
 
 Clears the display buffer.
 
+#### `OLED_TRANSPARENT n`
+
+Render inactive color as black (`n = 0`, the default setting) or transparent (`n = 1`). Useful when you want to multiple characters or accent marks, for example you may combine `foo` with `___` to get underlined text. Refer to `OLED_SYMBOL` for an example.
+
+#### `OLED_BITMAP file`
+
+Display a monochrome image at the current cursor location. You must first convert the file using `img2bits.py` utility and place it in the `img/` directory on the SD card. If you want to use a file as a profile default background, it should be named `profileN`, where N is a profile number.
+
+#### `OLED_SYMBOL symbol`
+
+Display a custom 6x10 symbol, use `txt2symbol.py` script to generate a command argument from a text definition. Example:
+```
+DEFINE CARET 4:
+DEFINE ACUTE 24
+OLED_TRANSPARENT 1
+OLED_PRINT foo
+OLED_CURSOR -12 -0
+OLED_SYMBOL CARET
+OLED_SYMBOL ACUTE
+OLED_UPDATE
+```
+Displays `fôó`.
+
 #### `OLED_UPDATE`
 
 Actually update the OLED.
@@ -444,6 +472,8 @@ You should use `OLED_CLEAR`, `OLED_CURSOR`, and `OLED_PRINT` to set up the displ
 #### `OLED_RESTORE`
 
 Restore the default profile/key name display. `OLED_UPDATE` **NOT NEEDED**.
+
+
 
 ### RGB LED Commands
 
@@ -472,6 +502,12 @@ Set `n` to 0 for current key.
 Set `n` from 1 to 15 for a particular key.
 
 Set `n` to 99 for all keys.
+
+### Special Commands
+
+#### `SEND_HID text`
+
+Send text via USB HID. Mainly useful for debugging.
 
 ## Reserved Variables
 
